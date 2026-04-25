@@ -1,61 +1,70 @@
-import { useState } from 'react'
-import './App.css' 
+import { useState, useEffect } from 'react'
+import './App.css'
+import Formulaire from './components/Formulaire'
+import Tache from './components/Tache'
+
+const API = 'http://192.168.100.8:3000'
 
 function App(){
   const [tache, setTache] = useState('')
   const [listeTaches, setListeTaches] = useState([])
 
-  // Ajout de taches
+  // Charger les tâches depuis le backend au démarrage
+  useEffect(() => {
+    fetch(`${API}/taches`)
+      .then(res => res.json())
+      .then(data => setListeTaches(data))
+  }, [])
+
+  // Ajouter une tâche
   const ajouterTache = () => {
     if (tache === '') return
-    setListeTaches([...listeTaches, { texte: tache, terminee: false }])
-    setTache('')
+    fetch(`${API}/taches`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ texte: tache })
+    })
+      .then(res => res.json())
+      .then(nouvelleTache => {
+        setListeTaches([...listeTaches, nouvelleTache])
+        setTache('')
+      })
   }
 
-  // Suppression
-  const supprimerTaches = (index) => {
-    const nouvelleListe = listeTaches.filter((t, i) => i !== index)
-    setListeTaches(nouvelleListe)
+  // Supprimer une tâche
+  const supprimerTaches = (id) => {
+    fetch(`${API}/taches/${id}`, { method: 'DELETE' })
+      .then(() => setListeTaches(listeTaches.filter(t => t.id !== id)))
   }
 
-  // État de la tache (terminée/pas encore terminée)
-  const toggleTache = (index) => {
-    const nouvelleListe = [...listeTaches]
-    nouvelleListe[index].terminee = !nouvelleListe[index].terminee
-    setListeTaches(nouvelleListe)
+  //Toggler une tâche
+  const toggleTache = (id) => {
+    fetch(`${API}/taches/${id}`, { method: 'PATCH' })
+      .then(res => res.json())
+      .then(tacheMaj => {
+        setListeTaches(listeTaches.map(t => t.id === tacheMaj.id ? tacheMaj : t))
+      })
   }
 
   return (
     <div className="container">
-      <h1>Ma To-Do App</h1>
+      <h1>Objectif+</h1>
 
-      {/* Ajouter une tache */}
-      <div className="input-zone">
-      <input 
-        type="text" 
-        placeholder="Ajouter une tache..." 
-        value={tache}
-        onChange={(e) => setTache(e.target.value)}
+      <Formulaire
+        tache={tache}
+        onChangerTache={setTache}
+        onAjouter={ajouterTache}
       />
-      <button className="btn-ajouter" onClick={ajouterTache}>Ajouter</button>
-    </div>
+
       <ul>
-        {listeTaches.map((t, index) => (
-          <li key={index}>
-            <span
-              onClick={() => toggleTache(index)}
-              style={{
-                textDecoration: t.terminee ? 'line-through' : 'none',
-                cursor: 'pointer',
-                color: t.terminee ? 'gray' : 'black'
-              }}
-            >
-              {t.texte}
-            </span>
-            <button className="btn-supprimer" onClick={() => supprimerTaches(index)}>
-              Supprimer
-            </button>
-          </li>
+        {listeTaches.map((t) => (
+          <Tache
+            key={t.id}
+            tache={t}
+            index={t.id}
+            onSupprimer={supprimerTaches}
+            onToggle={toggleTache}
+          />
         ))}
       </ul>
     </div>

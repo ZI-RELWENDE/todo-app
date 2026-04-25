@@ -10,6 +10,8 @@ body {
   background-color: #f0f2f5;
   display: flex;
   justify-content: center;
+  align-items: center;
+  min-height: 100vh;
   padding: 40px;
 }
 
@@ -94,4 +96,40 @@ li {
 
 .btn-supprimer:hover {
   background-color: #d9363e;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  body {
+    padding: 16px;
+  }
+
+  .container {
+    padding: 20px;
+    border-radius: 8px;
+  }
+
+  .input-zone {
+    flex-direction: column;
+  }
+
+  input {
+    width: 100%;
+  }
+
+  .btn-ajouter {
+    width: 100%;
+    text-align: center;
+  }
+
+  li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .btn-supprimer {
+    width: 100%;
+    text-align: center;
+  }
 }
