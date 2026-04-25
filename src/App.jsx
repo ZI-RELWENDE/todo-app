@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import './App.css' 
 
 function App(){
   const [tache, setTache] = useState('')
@@ -25,18 +26,19 @@ function App(){
   }
 
   return (
-    <div>
+    <div className="container">
       <h1>Ma To-Do App</h1>
 
       {/* Ajouter une tache */}
+      <div className="input-zone">
       <input 
         type="text" 
         placeholder="Ajouter une tache..." 
         value={tache}
         onChange={(e) => setTache(e.target.value)}
       />
-      <button onClick={ajouterTache}>Ajouter</button>
-
+      <button className="btn-ajouter" onClick={ajouterTache}>Ajouter</button>
+    </div>
       <ul>
         {listeTaches.map((t, index) => (
           <li key={index}>
@@ -50,7 +52,9 @@ function App(){
             >
               {t.texte}
             </span>
-            <button onClick={() => supprimerTaches(index)}>Supprimer</button>
+            <button className="btn-supprimer" onClick={() => supprimerTaches(index)}>
+              Supprimer
+            </button>
           </li>
         ))}
       </ul>
