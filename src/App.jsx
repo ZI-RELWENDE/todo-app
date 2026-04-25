@@ -3,7 +3,7 @@ import './App.css'
 import Formulaire from './components/Formulaire'
 import Tache from './components/Tache'
 
-const API = 'http://192.168.100.8:3000'
+const API = 'https://todo-backend-production-f15a.up.railway.app'
 
 function App(){
   const [tache, setTache] = useState('')
