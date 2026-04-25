@@ -25,4 +25,12 @@
     "vite": "^8.0.10",
     "vite-plugin-pwa": "^1.2.0"
   }
+  {
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "preview": "vite preview"
+  },
+  "installCommand": "npm install --legacy-peer-deps"
+}
 }
